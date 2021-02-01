@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useFirebaseApp } from 'reactfire';
 import 'firebase/auth'
 import MessagePopup from '../messagepopup';
-import ForgotPasswordAtLogin from '../accountFunctions'
 
 const Login = () => {
   // User State
@@ -47,19 +46,18 @@ const Login = () => {
           error: error.message,
         })
       })
+
   }
 
   return (
     <>
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
-        <input class="form-input" type="email" placeholder="Email" name="email" onChange={handleChange}/><br />
-        <input class="form-input" type="password" placeholder="Password" name="password" onChange={handleChange}/><br />
-        <button class="btn btn-primary" type="submit">Log in</button>
+        <input required class="form-control" type="email" placeholder="Email" name="email" onChange={handleChange}/><br />
+        <input requied class="form-control" type="password" placeholder="Password" name="password" onChange={handleChange}/><br />
+        <button class="btn btn-success" type="submit">Log in</button>
       </form>
-      <button class="btn btn-danger" >Forgot Password</button>
       {user.error && <MessagePopup messageSender={"TokTikker"} message={user.error}/>}
-      <ForgotPasswordAtLogin/>
     </>
   )
 };

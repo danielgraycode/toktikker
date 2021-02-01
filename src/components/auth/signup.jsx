@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useFirebaseApp } from 'reactfire';
 import 'firebase/auth'
+import MessagePopup from '../messagepopup'
 
 const Signup = () => {
   // User State
@@ -9,7 +10,7 @@ const Signup = () => {
     email: '',
     password: '',
     error: '',
-    verifyEmail: '',
+    verifyEmail: false,
   });
 
   // onChange function
@@ -43,7 +44,7 @@ const Signup = () => {
           .then(() => {
             setUser({
               ...user,
-              verifyEmail: `Welcome ${user.nickname}. To continue please verify your email.`,
+              verifyEmail: true
             })
           })
           .catch(error => {
@@ -68,13 +69,13 @@ const Signup = () => {
     <>
       <h1>Sign up</h1>
       <form onSubmit={handleSubmit}>
-        <input class="form-input" type="text" placeholder="Nickname" name="nickname" onChange={handleChange}/><br />
-        <input class="form-input" type="text" placeholder="Email" name="email" onChange={handleChange}/><br />
-        <input class="form-input" type="password" placeholder="Password" name="password" onChange={handleChange}/><br />
-        <button class="btn btn-primary" type="submit">Sign Up</button>
+        <input required class="form-control" type="text" placeholder="Username" name="nickname" onChange={handleChange}/><br />
+        <input required class="form-control" type="text" placeholder="Email" name="email" onChange={handleChange}/><br />
+        <input required class="form-control" type="password" placeholder="Password" name="password" onChange={handleChange}/><br />
+        <button class="btn btn-success" type="submit">Sign Up</button>
       </form>
-      {user.error && <h4>{user.error}</h4>}
-      {user.verifyEmail && <h4>{user.verifyEmail}</h4>}
+      {user.error && <MessagePopup message={user.error} messageSender="TokTikker"/>}
+      {user.verifyEmail && <MessagePopup message="Account created. Verify your email to continue" messageSender="TokTikker"/>}
     </>
   )
 };
