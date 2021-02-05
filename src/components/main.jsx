@@ -19,7 +19,7 @@ export default class Main extends Component {
     }
 }
 const Nav = () => {
-    const user = useUser()
+    const user = useUser();
     return (
         <Router>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">

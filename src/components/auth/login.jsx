@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useFirebaseApp } from 'reactfire';
 import 'firebase/auth'
-import MessagePopup from '../messagepopup';
+import {useToastContext, ADD} from '../messagepopup';
 
 const Login = () => {
+  const {toastDispatch} = useToastContext();
+
   // User State
   const [user, setUser] = useState({
     email: '',
@@ -35,8 +37,7 @@ const Login = () => {
             error: 'Please verify your email to continue.',
           })
           firebase.auth().signOut();
-        } else {
-          <MessagePopup messageSender={"TokTikker"} message={"Logged in!"}/>
+          toastDispatch({type: ADD, payload: {messageSender: "TokTikker", message: "Please verify your email to continue"}})
         }
       })
       .catch(error => {
@@ -45,6 +46,7 @@ const Login = () => {
           ...user,
           error: error.message,
         })
+        toastDispatch({type: ADD, payload: {messageSender: "TokTikker", message: error.message}})
       })
 
   }
@@ -57,7 +59,6 @@ const Login = () => {
         <input requied class="form-control" type="password" placeholder="Password" name="password" onChange={handleChange}/><br />
         <button class="btn btn-success" type="submit">Log in</button>
       </form>
-      {user.error && <MessagePopup messageSender={"TokTikker"} message={user.error}/>}
     </>
   )
 };

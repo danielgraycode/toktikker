@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { useFirebaseApp, useUser } from 'reactfire';
 import 'firebase/auth'
-import MessagePopup from './messagepopup';
+import {useToastContext, ADD} from './messagepopup'
 
 
 export const AccountManagementPage = () => {
@@ -9,14 +9,12 @@ export const AccountManagementPage = () => {
     const user = useUser();
     const [state, updateState] = useState({
         email: user.data.email,
-        message: ""
       });
 
     return (
         <>
         <h1>Manage your Account:</h1>
         <button class="btn btn-primary" onClick={this.changePassword}>Reset Password</button>
-        {state.message && <MessagePopup message={state.message} messageSender="TokTikker"/>}
         </>
     )
 }
@@ -24,17 +22,17 @@ export default AccountManagementPage
 
 export const ForgotPasswordAtLogin = () => {
     const firebase = useFirebaseApp();
+    const {toastDispatch} = useToastContext();
     const [state, updateState] = useState({
         email: '',
-        message: ""
       });
 
     const SendResetEmail = e => {
         e.preventDefault()
         firebase.auth().sendPasswordResetEmail(state.email).then(result => {
-            updateState({message: "Success! Check your email to reset the password."})
+            toastDispatch({type: ADD, payload:{message: "Success! Check your email to reset the password.", messageSender: "TokTikker"}})
         }).catch(error => {
-            updateState({message: error.message})
+            toastDispatch({type: ADD, payload:{message: error.message, messageSender: "TokTikker"}})
         })
     }
 
@@ -45,7 +43,6 @@ export const ForgotPasswordAtLogin = () => {
     return( 
         <>
         <h1>Reset Password:</h1>
-        {state.message && <MessagePopup message={state.message}  messageSender={"TokTikker"} />}
         <form onSubmit={SendResetEmail}>
             <input class="form-input" type="email" placeholder="Email" name="email" onChange={updateEmail}/><br />
             <button class="btn btn-danger" type="submit">Reset Password</button>
